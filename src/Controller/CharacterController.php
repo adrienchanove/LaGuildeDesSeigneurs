@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Character;
 
 class CharacterController extends AbstractController
 {
@@ -17,9 +18,12 @@ class CharacterController extends AbstractController
         ]);
     }
 
-    #[Route('/character/display', name: 'displayCharacter')]
+    #[Route('/character/display', name: 'character_display')]
     public function display(): Response
     {
+        $character = new Character();
+        dump($character);
+        //dd($character->toArray());
         return $this->json([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/CharacterController.php',
