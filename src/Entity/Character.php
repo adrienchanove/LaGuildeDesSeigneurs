@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[ORM\Table(name:"characters")]
 #[ORM\Entity(repositoryClass: CharacterRepository::class)]
@@ -14,34 +15,37 @@ class Character
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id = 1;
+    private $id;
 
     #[ORM\Column(type: 'string', length: 16)]
-    private $name = "Calimehtar";
+    private $name ;
 
     #[ORM\Column(type: 'string', length: 64)]
-    private $surname = "Guerrier de lumiere";
+    private $surname ;
 
     #[ORM\Column(type: 'string', length: 16, nullable: true)]
-    private $caste = "Guerrier";
+    private $caste ;
 
     #[ORM\Column(type: 'string', length: 16, nullable: true)]
-    private $knowledge = "Cartographie";
+    private $knowledge ;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $intelligence = 90;
+    private $intelligence ;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $life = 15;
+    private $life ;
 
     #[ORM\Column(type: 'string', length: 128, nullable: true)]
-    private $image = "http://www.finalyugi.com/images/arts/normal/3335.jpg";
+    private $image  ;
 
     #[ORM\Column(type: 'string', length: 16)]
     private $kind;
 
     #[ORM\Column(type: 'datetime')]
     private $creation;
+
+    #[ORM\Column(type: 'string', length: 40)]
+    private $identifier;
     
     
    
@@ -158,6 +162,18 @@ class Character
     public function setCreation(\DateTimeInterface $creation): self
     {
         $this->creation = $creation;
+
+        return $this;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): self
+    {
+        $this->identifier = $identifier;
 
         return $this;
     }
