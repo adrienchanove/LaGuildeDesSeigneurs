@@ -33,6 +33,12 @@ class Character
 
     #[ORM\Column(type: 'string', length: 128, nullable: true)]
     private $image = "http://www.finalyugi.com/images/arts/normal/3335.jpg";
+
+    #[ORM\Column(type: 'string', length: 16)]
+    private $kind;
+
+    #[ORM\Column(type: 'datetime')]
+    private $creation;
     
     
    
@@ -127,5 +133,29 @@ class Character
     public function toArray()
     {
         return get_object_vars($this);
+    }
+
+    public function getKind(): ?string
+    {
+        return $this->kind;
+    }
+
+    public function setKind(string $kind): self
+    {
+        $this->kind = $kind;
+
+        return $this;
+    }
+
+    public function getCreation(): ?\DateTimeInterface
+    {
+        return $this->creation;
+    }
+
+    public function setCreation(\DateTimeInterface $creation): self
+    {
+        $this->creation = $creation;
+
+        return $this;
     }
 }
