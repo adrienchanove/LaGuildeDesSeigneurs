@@ -5,9 +5,12 @@ namespace App\Entity;
 use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Table(name:"characters")]
 #[ORM\Entity(repositoryClass: CharacterRepository::class)]
 class Character
 {
+    
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
