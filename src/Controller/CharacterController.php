@@ -22,11 +22,11 @@ class CharacterController extends AbstractController
     public function display(): Response
     {
         $character = new Character();
-        dump($character);
+        //dump($character);
         //dd($character->toArray());
         return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/CharacterController.php',
+            'message' => $character->toArray(),
+            
         ]);
     }
 }
