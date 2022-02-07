@@ -9,7 +9,7 @@ use App\Entity\Character;
 
 class CharacterController extends AbstractController
 {
-    #[Route('/character', name: 'character')]
+    #[Route('/character', name: 'character', methods: ['GET','HEAD'])]
     public function index(): Response
     {
         return $this->json([
@@ -18,7 +18,7 @@ class CharacterController extends AbstractController
         ]);
     }
 
-    #[Route('/character/display', name: 'character_display')]
+    #[Route('/character/display', name: 'character_display', methods: ['GET','HEAD'])]
     public function display(): Response
     {
         $character = new Character();
