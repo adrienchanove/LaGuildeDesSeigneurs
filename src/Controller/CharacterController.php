@@ -11,11 +11,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CharacterController extends AbstractController
 {
-    public function __construct(CharacterServiceInterface $characterService ){
+    public function __construct(CharacterServiceInterface $characterService)
+    {
         $this->characterService = $characterService;
     }
 
-    #[Route('/character', name: 'character', methods: ['GET','HEAD'])]
+    #[Route('/character', name: 'character', methods: ['GET', 'HEAD'])]
     public function index(): Response
     {
         return $this->json([
@@ -36,30 +37,51 @@ class CharacterController extends AbstractController
         ]);
     }*/
 
-    #[Route('/character/create', name: 'character_creation', methods: ['POST','HEAD'])]
+    #[Route('/character/create', name: 'character_creation', methods: ['POST', 'HEAD'])]
     public function create(): Response
     {
         $character = $this->characterService->create();
         return new JsonResponse($character->toArray());
-        
-
-
-        
-        
     }
 
     #[Route(
-        '/character/display/{identifier}', 
+        '/character/display/{identifier}',
         name: 'character_display_identifier',
-        requirements:["identifier"=> "^([a-z0-9]{40})$"], 
-        methods: ['GET','HEAD']
+        requirements: ["identifier" => "^([a-z0-9]{40})$"],
+        methods: ['GET', 'HEAD']
     )]
     public function display(Character $character): Response
     {
-        $this->denyAccessUnlessGranted('character_display',$character);
+        $this->denyAccessUnlessGranted('character_display', $character);
         // A MODIFIER
         //dump($character);
         //dd($character->toArray());
         return new JsonResponse($character->toArray());
+    }
+
+    #[Route(
+        '/character/modify/{identifier}',
+        requirements: ["identifier" => "^([a-z0-9]{40})$"],
+        name: 'character_modify',
+        methods: ['PUT', 'HEAD', 'GET']
+    )]
+    public function modify(Character $character)
+    {
+        $this->denyAccessUnlessGranted('character_modify', $character);
+        $character = $this->characterService->modify($character);
+        return new JsonResponse($character->toArray());
+    }
+
+    #[Route(
+        '/character/delete/{identifier}',
+        requirements: ["identifier" => "^([a-z0-9]{40})$"],
+        name: 'character_delete',
+        methods: ['DELETE', 'HEAD', 'GET']
+    )]
+    public function delete(Character $character)
+    {
+        $this->denyAccessUnlessGranted('character_delete', $character);
+        $response = $this->characterService->delete($character);
+        return new JsonResponse(array('delete' => $response));
     }
 }

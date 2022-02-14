@@ -6,46 +6,101 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class CharacterControllerTest extends WebTestCase
 {
-    /*public function testCharacterDisplayRoute(): void
-    {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/character/display');
-
-        $response = $client->getResponse();
-
-        $this->isJsonResponse($response);
-    }*/
+    private $client;
+    private $content;
+    private static $identifier;
 
 
     public function testCharacterRoute(): void
     {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/character');
-
-        $response = $client->getResponse();
-
-        $this->isJsonResponse($response);
+        $this->client->request('GET', '/character');
+        $response = $this->client->getResponse();
+        $this->isJsonResponse();
     }
+
+    /*** Tests create*/
+    public function testCreate(){
+        $this->client->request('POST', '/character/create');
+        $this->isJsonResponse();
+        $this->defineIdentifier();$this->assertIdentifier();}
+
+    public function testDisplay(): void
+    {
+        $this->client->request('GET', '/character/display/' . self::$identifier);
+        $response = $this->client->getResponse();
+        $this->isJsonResponse();
+        $this->assertIdentifier();
+    }
+
+    public function testDisplay404(): void
+    {
+        $this->client->request('GET', '/character/display/badIdentifier');
+        $response = $this->client->getResponse();
+        $this->assertError404($response->getStatusCode());
+    }
+
+    /**
+     * Tests modify
+     */
+    public function testModify()
+    {
+        $this->client->request('PUT', '/character/modify/' . self::$identifier);
+        $response = $this->client->getResponse();
+        $this->isJsonResponse();
+        $this->assertIdentifier();
+    }
+
+    /**
+     * Tests delete
+     */
+    public function testDelete()
+    {
+
+        $this->client->request('DELETE', '/character/delete/' . self::$identifier);
+        $response = $this->client->getResponse();
+        $this->isJsonResponse();
+    }
+
     
-    public function testDisplay():void
+
+
+    /*** Asserts that 'identifier' is present in the Response*/
+    public function assertIdentifier()
     {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/character/display/2606ee3f0efffc67ef6bb54b2fb7cc3964c6aca8');
+        $this->assertArrayHasKey('identifier', $this->content);
+    }
 
-        $response = $client->getResponse();
-
-        $this->isJsonResponse($response);
-
+    /*** Defines identifier*/
+    public function defineIdentifier()
+    {
+        self::$identifier = $this->content['identifier'];
     }
 
 
 
-    public function isJsonResponse($response): void
+
+
+
+
+
+
+
+    public function isJsonResponse(): void
     {
-        
         $this->assertResponseIsSuccessful();
         //$this->assertEquals(200,$response->getStatusCode());
-        $this->assertTrue($response->headers->contains('content-Type','application/json'), $response->headers);
+        $response = $this->client->getResponse();
+        $this->content = json_decode($response->getContent(), true, 50);
+        $this->assertTrue($response->headers->contains('content-Type', 'application/json'), $response->headers);
+    }
 
+    public function assertError404($statusCode): void
+    {
+        $this->assertEquals(404, $statusCode);
+    }
+
+    public function setUp(): void
+    {
+        $this->client = static::createClient();
     }
 }
