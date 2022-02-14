@@ -29,6 +29,7 @@ class CharacterService implements CharacterServiceInterface
             ->setLife(13)
             ->setImage('https://static.zerochan.net/Firiel.Dee.full.615662.jpg')
             ->setCreation(new DateTime())
+            ->setModification(new DateTime())
             ->setIdentifier(hash('sha1', uniqid()));
 
         $this->em->persist($character);
@@ -45,7 +46,9 @@ class CharacterService implements CharacterServiceInterface
             ->setKnowledge('Diplomatie')
             ->setIntelligence(110)
             ->setLife(13)
-            ->setImage('/images/gorthol.jpg');
+            ->setImage('/images/gorthol.jpg')
+            ->setModification(new DateTime())
+            ;
         $this->em->persist($character);
         $this->em->flush();
         return $character;

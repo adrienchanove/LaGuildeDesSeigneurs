@@ -23,6 +23,7 @@ class AppFixtures extends Fixture
                 ->setLife(mt_rand(10, 20))
                 ->setImage('/images/eldalote.jpg')
                 ->setIdentifier(hash('sha1', uniqid()))
+                ->setModification(new DateTime())
                 ->setCreation(new DateTime());
             $manager->persist($character);
         }
