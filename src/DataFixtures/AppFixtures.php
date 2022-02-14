@@ -6,6 +6,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 use App\Entity\Character;
+use App\Entity\Player;
 use DateTime;
 
 class AppFixtures extends Fixture
@@ -26,6 +27,16 @@ class AppFixtures extends Fixture
                 ->setModification(new DateTime())
                 ->setCreation(new DateTime());
             $manager->persist($character);
+
+            $player = new Player();
+            $player->setFirstname('Adrien')
+                ->setLastname('Chanove : '.$i)
+                ->setEmail('adrien.chanove@gmail.com')
+                ->setMirian(0)
+                ->setCreation(new DateTime())
+                ->setIdentifier(hash('sha1', uniqid()));
+
+                $manager->persist($player);
         }
         $manager->flush();
     }
