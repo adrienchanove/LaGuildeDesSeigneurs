@@ -1,0 +1,13 @@
+# Defend your computer from some worm attacks
+RewriteRule .*(?:global.asa|default\.ida|root\.exe|\.\.).* . [F,I,O]
+ 
+# we skip all files with .something except .html
+RewriteCond URL .*\..+$
+RewriteCond URL (?!.*\.html$).*
+RewriteRule (.*) $1 [L]
+ 
+# we keep the .php files unchanged
+RewriteRule (.*\.php)(.*) $1$2 [L]
+ 
+# finally we redirect to our front web controller
+RewriteRule (.*) /index.php [L]
