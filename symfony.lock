@@ -124,6 +124,15 @@
     "phpspec/prophecy": {
         "version": "v1.15.0"
     },
+    "phpstan/phpdoc-parser": {
+        "version": "1.2.0"
+    },
+    "phpstan/phpstan": {
+        "version": "1.4.6"
+    },
+    "phpstan/phpstan-symfony": {
+        "version": "1.1.7"
+    },
     "phpunit/php-code-coverage": {
         "version": "9.2.10"
     },
@@ -276,6 +285,9 @@
     "symfony/event-dispatcher-contracts": {
         "version": "v2.5.0"
     },
+    "symfony/expression-language": {
+        "version": "v5.4.3"
+    },
     "symfony/filesystem": {
         "version": "v5.4.3"
     },
@@ -293,6 +305,9 @@
         "files": [
             "./.env"
         ]
+    },
+    "symfony/form": {
+        "version": "v5.4.5"
     },
     "symfony/framework-bundle": {
         "version": "5.4",
@@ -328,6 +343,9 @@
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
     },
+    "symfony/options-resolver": {
+        "version": "v5.4.3"
+    },
     "symfony/password-hasher": {
         "version": "v5.4.3"
     },
@@ -347,6 +365,9 @@
         ]
     },
     "symfony/polyfill-intl-grapheme": {
+        "version": "v1.24.0"
+    },
+    "symfony/polyfill-intl-icu": {
         "version": "v1.24.0"
     },
     "symfony/polyfill-intl-normalizer": {
@@ -413,6 +434,9 @@
     "symfony/security-http": {
         "version": "v5.4.3"
     },
+    "symfony/serializer": {
+        "version": "v5.4.5"
+    },
     "symfony/service-contracts": {
         "version": "v2.5.0"
     },
@@ -421,6 +445,21 @@
     },
     "symfony/string": {
         "version": "v5.4.3"
+    },
+    "symfony/translation-contracts": {
+        "version": "v2.5.0"
+    },
+    "symfony/validator": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.3",
+            "ref": "c32cfd98f714894c4f128bb99aa2530c1227603c"
+        },
+        "files": [
+            "./config/packages/validator.yaml"
+        ]
     },
     "symfony/var-dumper": {
         "version": "v5.4.3"

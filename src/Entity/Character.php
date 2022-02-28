@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[ORM\Table(name:"characters")]
@@ -15,18 +16,25 @@ class Character
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Assert\Length(min: 40, max: 40)]
     private $id;
 
     #[ORM\Column(type: 'string', length: 16)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 16)]
     private $name ;
 
     #[ORM\Column(type: 'string', length: 64)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 64)]
     private $surname ;
 
     #[ORM\Column(type: 'string', length: 16, nullable: true)]
+    #[Assert\Length(min: 3, max: 16)]
     private $caste ;
 
     #[ORM\Column(type: 'string', length: 16, nullable: true)]
+    #[Assert\Length(min: 3, max: 16)]
     private $knowledge ;
 
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -36,9 +44,12 @@ class Character
     private $life ;
 
     #[ORM\Column(type: 'string', length: 128, nullable: true)]
+    #[Assert\Length(min: 5, max: 128)]
     private $image  ;
 
     #[ORM\Column(type: 'string', length: 16)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 16)]
     private $kind;
 
     #[ORM\Column(type: 'datetime')]
@@ -49,6 +60,9 @@ class Character
 
     #[ORM\Column(type: 'datetime')]
     private $modification;
+
+    #[ORM\ManyToOne(targetEntity: Player::class, inversedBy: 'character')]
+    private $player;
     
     
    
@@ -189,6 +203,18 @@ class Character
     public function setModification(\DateTimeInterface $modification): self
     {
         $this->modification = $modification;
+
+        return $this;
+    }
+
+    public function getPlayer(): ?Player
+    {
+        return $this->player;
+    }
+
+    public function setPlayer(?Player $player): self
+    {
+        $this->player = $player;
 
         return $this;
     }

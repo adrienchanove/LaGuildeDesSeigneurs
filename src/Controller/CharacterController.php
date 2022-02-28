@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Character;
 use App\Service\CharacterServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class CharacterController extends AbstractController
 {
@@ -16,9 +17,28 @@ class CharacterController extends AbstractController
         $this->characterService = $characterService;
     }
 
+    //IMAGES
+    /*** Returns images randomly** @Route("/character/images/{number}",*     name="character_images",*     requirements={"number": "^([0-9]{1,2})$"},*     methods={"GET", "HEAD"}* )*/
+    #[Route('/character/images/{kind}/{number}', name: 'character_images', requirements: ["identifier" => "^([0-9]{1,2})$"], methods: ['GET', 'HEAD'])]
+    public function images(int $number)
+    {
+        $this->denyAccessUnlessGranted('characterIndex', null);
+        return new JsonResponse($this->characterService->getImages($number));
+    }
+
+    #[Route('/character/images/{number}', name: 'character_images_kind', requirements: ["identifier" => "^([0-9]{1,2})$"], methods: ['GET', 'HEAD'])]
+    public function imagesKind(string $kind, int $number)
+    {
+        $this->denyAccessUnlessGranted('characterIndex', null);
+        return new JsonResponse($this->characterService->getImagesKind($kind, $number));
+    }
+
+
+
     #[Route('/character', name: 'character', methods: ['GET', 'HEAD'])]
     public function index(): Response
     {
+        
         return $this->json([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/CharacterController.php',
@@ -38,9 +58,10 @@ class CharacterController extends AbstractController
     }*/
 
     #[Route('/character/create', name: 'character_creation', methods: ['POST', 'HEAD'])]
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        $character = $this->characterService->create();
+        //$character = $this->characterService->create();
+        $character = $this->characterService->create($request->getContent());
         return new JsonResponse($character->toArray());
     }
 
@@ -63,12 +84,12 @@ class CharacterController extends AbstractController
         '/character/modify/{identifier}',
         requirements: ["identifier" => "^([a-z0-9]{40})$"],
         name: 'character_modify',
-        methods: ['PUT', 'HEAD', 'GET']
+        methods: ['PUT', 'HEAD', 'POST']
     )]
-    public function modify(Character $character)
+    public function modify(Request $request,Character $character)
     {
         $this->denyAccessUnlessGranted('character_modify', $character);
-        $character = $this->characterService->modify($character);
+        $character = $this->characterService->modify($character, $request->getContent());
         return new JsonResponse($character->toArray());
     }
 

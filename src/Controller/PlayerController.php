@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Player;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 
 use App\Service\PlayerServiceInterface;
 
@@ -22,17 +23,15 @@ class PlayerController extends AbstractController
     #[Route('/player', name: 'player')]
     public function index(): Response
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PlayerController.php',
-        ]);
+        $players = $this->playerService->getAll();
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($players));
     }
 
     #[Route('/player/create', name: 'player_creation', methods: ['POST', 'HEAD'])]
     public function create(): Response
     {
         $player = $this->playerService->create();
-        return new JsonResponse($player->toArray());
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 
     #[Route(
@@ -41,11 +40,12 @@ class PlayerController extends AbstractController
         requirements: ["identifier" => "^([a-z0-9]{40})$"],
         methods: ['GET', 'HEAD']
     )]
+    #[Entity("player", expr:"repository.findOneByIdentifier(identifier)")]
     public function display(Player $player): Response
     {
         $this->denyAccessUnlessGranted('player_display', $player);
         
-        return new JsonResponse($player->toArray());
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 
     #[Route(
@@ -58,7 +58,7 @@ class PlayerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('player_modify', $player);
         $player = $this->playerService->modify($player);
-        return new JsonResponse($player->toArray());
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 
     #[Route(
@@ -71,6 +71,6 @@ class PlayerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('player_delete', $player);
         $response = $this->playerService->delete($player);
-        return new JsonResponse(array('delete' => $response));
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 }
