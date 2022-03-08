@@ -116,4 +116,12 @@ class CharacterService implements CharacterServiceInterface
     {
         return "";
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAll()
+    {      
+        return $this->characterRepository->findAll();
+    }
 }

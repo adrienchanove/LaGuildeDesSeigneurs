@@ -6,12 +6,17 @@ use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
-#[ORM\Table(name:"characters")]
+#[ORM\Table(name: "characters")]
 #[ORM\Entity(repositoryClass: CharacterRepository::class)]
 class Character
 {
-    
+
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,30 +26,30 @@ class Character
     #[ORM\Column(type: 'string', length: 16)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 16)]
-    private $name ;
+    private $name;
 
     #[ORM\Column(type: 'string', length: 64)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 64)]
-    private $surname ;
+    private $surname;
 
     #[ORM\Column(type: 'string', length: 16, nullable: true)]
     #[Assert\Length(min: 3, max: 16)]
-    private $caste ;
+    private $caste;
 
     #[ORM\Column(type: 'string', length: 16, nullable: true)]
     #[Assert\Length(min: 3, max: 16)]
-    private $knowledge ;
+    private $knowledge;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $intelligence ;
+    private $intelligence;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $life ;
+    private $life;
 
     #[ORM\Column(type: 'string', length: 128, nullable: true)]
     #[Assert\Length(min: 5, max: 128)]
-    private $image  ;
+    private $image;
 
     #[ORM\Column(type: 'string', length: 16)]
     #[Assert\NotBlank]
@@ -63,9 +68,9 @@ class Character
 
     #[ORM\ManyToOne(targetEntity: Player::class, inversedBy: 'characters')]
     private $player;
-    
-    
-   
+
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -154,10 +159,6 @@ class Character
 
         return $this;
     }
-    public function toArray()
-    {
-        return get_object_vars($this);
-    }
 
     public function getKind(): ?string
     {
@@ -217,5 +218,20 @@ class Character
         $this->player = $player;
 
         return $this;
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function serializeJson($data)
+    {
+        $encoders = new JsonEncoder();
+        $defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($data) {
+                return $data->getIdentifier();
+            },
+        ];
+        $normalizers = new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
+        $serializer = new Serializer([new DateTimeNormalizer(), $normalizers], [$encoders]);
+        return $serializer->serialize($data, 'json');
     }
 }

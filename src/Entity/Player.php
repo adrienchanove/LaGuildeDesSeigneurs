@@ -6,6 +6,11 @@ use App\Repository\PlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
 class Player
@@ -39,7 +44,7 @@ class Player
 
     public function __construct()
     {
-        $this->character = new ArrayCollection();
+        $this->characters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -154,5 +159,22 @@ class Player
         }
 
         return $this;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serializeJson($data)
+    {
+        $encoders = new JsonEncoder();
+        $defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($data) {
+                return $data->getIdentifier();
+            },
+        ];
+        $normalizers = new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
+        $serializer = new Serializer([new DateTimeNormalizer(), $normalizers], [$encoders]);
+        return $serializer->serialize($data, 'json');
     }
 }
