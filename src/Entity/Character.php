@@ -16,7 +16,6 @@ class Character
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Assert\Length(min: 40, max: 40)]
     private $id;
 
     #[ORM\Column(type: 'string', length: 16)]
@@ -56,12 +55,13 @@ class Character
     private $creation;
 
     #[ORM\Column(type: 'string', length: 40)]
+    #[Assert\Length(min: 40, max: 40)]
     private $identifier;
 
     #[ORM\Column(type: 'datetime')]
     private $modification;
 
-    #[ORM\ManyToOne(targetEntity: Player::class, inversedBy: 'character')]
+    #[ORM\ManyToOne(targetEntity: Player::class, inversedBy: 'characters')]
     private $player;
     
     
