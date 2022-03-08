@@ -1,7 +1,7 @@
 {
     "type": "project",
     "description": "API la guilde des seigneurs!",
-    "name": "adrienchanove/LaGuildeDesSeigneurs",
+    "name": "adrienchanove/la-guilde-des-seigneurs",
     "authors": [
         {
             "name": "Chanove Adrien",
@@ -13,9 +13,8 @@
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "autre": "7.2.5",
     "require": {
-        "php": ">=8.0.0",
+        "php": ">=7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/annotations": "^1.13",
