@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Player;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\PlayerServiceInterface;
 
@@ -28,9 +29,9 @@ class PlayerController extends AbstractController
     }
 
     #[Route('/player/create', name: 'player_creation', methods: ['POST', 'HEAD'])]
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        $player = $this->playerService->create();
+        $player = $this->playerService->create($request->getContent());
         return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 
@@ -52,12 +53,13 @@ class PlayerController extends AbstractController
         '/player/modify/{identifier}',
         requirements: ["identifier" => "^([a-z0-9]{40})$"],
         name: 'player_modify',
-        methods: ['PUT', 'HEAD', 'GET']
+        methods: ['PUT', 'HEAD', 'POST']
     )]
-    public function modify(Player $player)
+    public function modify(Request $request, Player $player)
     {
+        
         $this->denyAccessUnlessGranted('player_modify', $player);
-        $player = $this->playerService->modify($player);
+        $character = $this->playerService->modify($player, $request->getContent());
         return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 

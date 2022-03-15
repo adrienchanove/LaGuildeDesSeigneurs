@@ -66,7 +66,7 @@ class CharacterControllerTest extends WebTestCase
         $response = $this->client->getResponse();
         $this->isJsonResponse();
         $this->assertIdentifier();
-
+        
         //Tests with whole content
         $this->client->request(
             'PUT',

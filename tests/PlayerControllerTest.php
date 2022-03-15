@@ -19,12 +19,23 @@ class PlayerControllerTest extends WebTestCase
     }
 
     /**
-    * Tests create
-    */
-    public function testCreate(){
-        $this->client->request('POST', '/player/create');
+     * Tests create
+     */
+    public function testCreate()
+    {
+        $this->client->request(
+            'POST',
+            '/player/create',
+            array(), //parameters
+            array(), //files
+            array('CONTENT_TYPE' => 'application/json'), //server
+            '{"firstname":"Laurent", "lastname":"Marquet",
+            "email":"laurent.marquet@laposte.net", "mirian": 200}'
+        );
         $this->isJsonResponse();
-        $this->defineIdentifier();$this->assertIdentifier();}
+        $this->defineIdentifier();
+        $this->assertIdentifier();
+    }
 
     public function testDisplay(): void
     {
@@ -43,18 +54,37 @@ class PlayerControllerTest extends WebTestCase
 
     /**
      * Tests modify
-     *//*
+     */
     public function testModify()
     {
-        $this->client->request('PUT', '/player/modify/' . self::$identifier);
-        $response = $this->client->getResponse();
+        //Tests with partial data array
+        $this->client->request(
+            'PUT',
+            '/player/modify/' . self::$identifier,
+            array(), //parameters
+            array(), //files
+            array('CONTENT_TYPE' => 'application/json'), //server
+            '{"firstname":"Laurent", "lastname":"Marquet"}'
+        );
+        $this->isJsonResponse();
+        $this->assertIdentifier();
+        //Tests with whole content
+        $this->client->request(
+            'PUT',
+            '/player/modify/' . self::$identifier,
+            array(), //parameters
+            array(), //files
+            array('CONTENT_TYPE' => 'application/json'), //server
+            '{"firstname":"Laurent", "lastname":"Marquet", "email":"laurent.marquet@laposte.net",
+    "mirian": 200}'
+        );
         $this->isJsonResponse();
         $this->assertIdentifier();
     }
 
     /**
      * Tests delete
-     *//*
+     */
     public function testDelete()
     {
 
@@ -66,13 +96,17 @@ class PlayerControllerTest extends WebTestCase
     
 
 
-    /*** Asserts that 'identifier' is present in the Response*/
+    /**
+    * Asserts that 'identifier' is present in the Response
+    */
     public function assertIdentifier()
     {
         $this->assertArrayHasKey('identifier', $this->content);
     }
 
-    /*** Defines identifier*/
+    /**
+    * Defines identifier
+    */
     public function defineIdentifier()
     {
         self::$identifier = $this->content['identifier'];

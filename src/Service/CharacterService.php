@@ -19,9 +19,11 @@ class CharacterService implements CharacterServiceInterface
      * {@inheritdoc}
      */
     private $formFactory;
-    public function __construct(private EntityManagerInterface $em,
-    FormFactoryInterface $formFactory,ValidatorInterface $validator)
-    {
+    public function __construct(
+        private EntityManagerInterface $em,
+        FormFactoryInterface $formFactory,
+        ValidatorInterface $validator
+    ) {
         $this->formFactory = $formFactory;
         $this->validator = $validator;
     }
@@ -63,11 +65,11 @@ class CharacterService implements CharacterServiceInterface
     {
         $errors = $this->validator->validate($character);
         if (count($errors) > 0) {
-            throw new UnprocessableEntityHttpException((string) $errors .' Missing data for Entity -> ' . json_encode($character->toArray()));
+            throw new UnprocessableEntityHttpException((string) $errors . ' Missing data for Entity -> ' . json_encode($character->toArray()));
         }
     }
 
-     /**
+    /**
      * {@inheritdoc}
      */
     public function submit(Character $character, $formName, $data)
@@ -81,7 +83,7 @@ class CharacterService implements CharacterServiceInterface
 
         //Submits form
         $form = $this->formFactory->create($formName, $character, ['csrf_protection' => false]);
-        $form->submit($dataArray, false);//With false, only submitted fields are validated
+        $form->submit($dataArray, false); //With false, only submitted fields are validated
 
         //Gets errors
         $errors = $form->getErrors();
@@ -110,7 +112,16 @@ class CharacterService implements CharacterServiceInterface
         $this->em->flush();
         return true;
     }
-    public function getImagesKind(string $kind, int $number){
+    public function getImagesKind(string $kind, int $number)
+    {
         return "";
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAll()
+    {      
+        return $this->characterRepository->findAll();
     }
 }
