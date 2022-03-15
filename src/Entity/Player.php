@@ -5,39 +5,56 @@ namespace App\Entity;
 use App\Repository\PlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
 class Player
 {
-    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
-    #[ORM\Column(type: 'string', length: 45)]
-    private $firstname;
+    #[ORM\Column(type: 'string', length: 40, name: "gls_identifier")]
+    #[Assert\Length(
+        min: 40,
+        max: 40,
+    )]
+    private string $identifier;
 
-    #[ORM\Column(type: 'string', length: 45)]
-    private $lastname;
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 3,
+        max: 16,
+    )]
+    #[ORM\Column(type: 'string', length: 50, name: "gls_firstname")]
+    private string $firstname;
 
-    #[ORM\Column(type: 'string', length: 100)]
-    private $email;
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 3,
+        max: 16,
+    )]
+    #[ORM\Column(type: 'string', length: 50, name: "gls_lastname")]
+    private string $lastname;
 
-    #[ORM\Column(type: 'integer')]
-    private $mirian;
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+    )]
+    #[ORM\Column(type: 'string', length: 255, name: "gls_email")]
+    private string $email;
 
-    #[ORM\Column(type: 'datetime')]
-    private $creation;
+    #[ORM\Column(type: 'integer', nullable: true, name: "gls_mirian")]
+    private int $mirian;
 
-    #[ORM\Column(type: 'string', length: 40)]
-    private $identifier;
+    #[ORM\Column(type: 'datetime', name: "gls_creation")]
+    private \DateTime $creation;
+
+    #[ORM\Column(type: 'datetime', name: "gls_modification")]
+    private \DateTime $modification;
 
     #[ORM\OneToMany(mappedBy: 'player', targetEntity: Character::class)]
     private $characters;
@@ -50,6 +67,19 @@ class Player
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): self
+    {
+        $this->identifier = $identifier;
+
+        return $this;
     }
 
     public function getFirstname(): ?string
@@ -93,40 +123,33 @@ class Player
         return $this->mirian;
     }
 
-    public function setMirian(int $mirian): self
+    public function setMirian(?int $mirian): self
     {
         $this->mirian = $mirian;
 
         return $this;
     }
 
-    public function getCreation(): ?\DateTimeInterface
+    public function getCreation(): ?\DateTime
     {
         return $this->creation;
     }
 
-    public function setCreation(\DateTimeInterface $creation): self
+    public function setCreation(\DateTime $creation): self
     {
         $this->creation = $creation;
 
         return $this;
     }
 
-    /*public function toArray()
+    public function getModification(): ?\DateTime
     {
-        //dd($this);
-        return get_object_vars($this);
-        
-    }*/
-
-    public function getIdentifier(): ?string
-    {
-        return $this->identifier;
+        return $this->modification;
     }
 
-    public function setIdentifier(string $identifier): self
+    public function setModification(\DateTime $modification): self
     {
-        $this->identifier = $identifier;
+        $this->modification = $modification;
 
         return $this;
     }
@@ -159,22 +182,5 @@ class Player
         }
 
         return $this;
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serializeJson($data)
-    {
-        $encoders = new JsonEncoder();
-        $defaultContext = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($data) {
-                return $data->getIdentifier();
-            },
-        ];
-        $normalizers = new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
-        $serializer = new Serializer([new DateTimeNormalizer(), $normalizers], [$encoders]);
-        return $serializer->serialize($data, 'json');
     }
 }

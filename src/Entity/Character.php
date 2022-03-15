@@ -3,77 +3,113 @@
 namespace App\Entity;
 
 use App\Repository\CharacterRepository;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: "characters")]
 #[ORM\Entity(repositoryClass: CharacterRepository::class)]
+#[ORM\Table(name: "characters")]
 class Character
 {
-
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
-    #[ORM\Column(type: 'string', length: 16)]
+    #[ORM\Column(type: 'string', length: 40, name: "gls_identifier")]
+    #[Assert\Length(
+        min: 40,
+        max: 40,
+    )]
+    private string $identifier;
+
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 16)]
-    private $name;
+    #[Assert\Length(
+        min: 3,
+        max: 16,
+    )]
+    #[ORM\Column(type: 'string', length: 16, name: "gls_kind")]
+    private string $kind;
 
-    #[ORM\Column(type: 'string', length: 64)]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 64)]
-    private $surname;
+    #[Assert\Length(
+        min: 3,
+        max: 16,
+    )]
+    #[ORM\Column(type: 'string', length: 16, name: "gls_name")]
+    private string $name;
 
-    #[ORM\Column(type: 'string', length: 16, nullable: true)]
-    #[Assert\Length(min: 3, max: 16)]
-    private $caste;
-
-    #[ORM\Column(type: 'string', length: 16, nullable: true)]
-    #[Assert\Length(min: 3, max: 16)]
-    private $knowledge;
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private $intelligence;
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private $life;
-
-    #[ORM\Column(type: 'string', length: 128, nullable: true)]
-    #[Assert\Length(min: 5, max: 128)]
-    private $image;
-
-    #[ORM\Column(type: 'string', length: 16)]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 16)]
-    private $kind;
+    #[Assert\Length(
+        min: 3,
+        max: 64,
+    )]
+    #[ORM\Column(type: 'string', length: 64, name: "gls_surname")]
+    private string $surname;
 
-    #[ORM\Column(type: 'datetime')]
-    private $creation;
+    #[Assert\Length(
+        min: 3,
+        max: 16,
+    )]
+    #[ORM\Column(type: 'string', length: 16, nullable: true, name: "gls_caste")]
+    private ?string $caste = null;
 
-    #[ORM\Column(type: 'string', length: 40)]
-    #[Assert\Length(min: 40, max: 40)]
-    private $identifier;
+    #[Assert\Length(
+        min: 3,
+        max: 16,
+    )]
+    #[ORM\Column(type: 'string', length: 16, nullable: true, name: "gls_knowledge")]
+    private ?string $knowledge = null;
 
-    #[ORM\Column(type: 'datetime')]
-    private $modification;
+    #[ORM\Column(type: 'integer', nullable: true, name: "gls_intelligence")]
+    private ?int $intelligence = null;
+
+    #[ORM\Column(type: 'integer', nullable: true, name: "gls_life")]
+    private ?int $life = null;
+
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 5,
+        max: 128,
+    )]
+    #[ORM\Column(type: 'string', length: 128, nullable: true, name: "gls_image")]
+    private ?string $image = null;
+
+    #[ORM\Column(type: 'datetime', name: "gls_creation")]
+    private \DateTime $creation;
+
+    #[ORM\Column(type: 'datetime', name: "gls_modification")]
+    private \DateTime $modification;
 
     #[ORM\ManyToOne(targetEntity: Player::class, inversedBy: 'characters')]
     private $player;
 
-
-
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): self
+    {
+        $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    public function getKind(): ?string
+    {
+        return $this->kind;
+    }
+
+    public function setKind(string $kind): self
+    {
+        $this->kind = $kind;
+
+        return $this;
     }
 
     public function getName(): ?string
@@ -160,48 +196,29 @@ class Character
         return $this;
     }
 
-    public function getKind(): ?string
+    public function toArray(): array
     {
-        return $this->kind;
+        return get_object_vars($this);
     }
 
-    public function setKind(string $kind): self
-    {
-        $this->kind = $kind;
-
-        return $this;
-    }
-
-    public function getCreation(): ?\DateTimeInterface
+    public function getCreation(): ?\DateTime
     {
         return $this->creation;
     }
 
-    public function setCreation(\DateTimeInterface $creation): self
+    public function setCreation(\DateTime $creation): self
     {
         $this->creation = $creation;
 
         return $this;
     }
 
-    public function getIdentifier(): ?string
-    {
-        return $this->identifier;
-    }
-
-    public function setIdentifier(string $identifier): self
-    {
-        $this->identifier = $identifier;
-
-        return $this;
-    }
-
-    public function getModification(): ?\DateTimeInterface
+    public function getModification(): ?\DateTime
     {
         return $this->modification;
     }
 
-    public function setModification(\DateTimeInterface $modification): self
+    public function setModification(\DateTime $modification): self
     {
         $this->modification = $modification;
 
@@ -218,20 +235,5 @@ class Character
         $this->player = $player;
 
         return $this;
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function serializeJson($data)
-    {
-        $encoders = new JsonEncoder();
-        $defaultContext = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($data) {
-                return $data->getIdentifier();
-            },
-        ];
-        $normalizers = new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
-        $serializer = new Serializer([new DateTimeNormalizer(), $normalizers], [$encoders]);
-        return $serializer->serialize($data, 'json');
     }
 }
