@@ -32,6 +32,15 @@ class CharacterApiHtmlController extends AbstractController
         ]);
     }
 
+    #[Route("/gt/{min}", requirements: ["min" => "^([0-9]{1,4})$"], name: "character_api_html_index_gt", methods: ["GET"])]
+    public function indexGt($min): Response
+    {
+        $response = $this->client->request('GET','http://localhost/character/display/gt/'.$min);
+        return $this->render('character_api_html/index.html.twig', [
+            'characters' => $response->toArray(),
+        ]);
+    }
+
 
     #[Route("/new", name: "character_api_html_new", methods: ["GET", "POST"])]
     public function new(Request $request): Response
