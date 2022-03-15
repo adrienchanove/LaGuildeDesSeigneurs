@@ -28,11 +28,11 @@ class CharacterHtmlController extends AbstractController
         ]);
     }
 
-    #[Route('/gt/{min}', requirements: ["min" => "^([0-9]{1,4})$"], name: 'character_html_index_gt', methods: ['GET'])]
-    public function indexGT(Int $min): Response
+    #[Route('/AllByIntelligenceLevel/{lvl}', requirements: ["lvl" => "^([0-9]{1,4})$"], name: 'character_html_index_gt', methods: ['GET'])]
+    public function getAllByIntelligenceLevel(Int $lvl): Response
     {
         return $this->render('character_html/index.html.twig', [
-            'characters' => $this->characterService->getAllGt($min),
+            'characters' => $this->characterService->getAllByIntelligenceLevel($lvl),
         ]);
     }
 

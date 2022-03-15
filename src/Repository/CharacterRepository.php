@@ -32,13 +32,14 @@ class CharacterRepository extends ServiceEntityRepository
     }
 
     //find many character by minimum intelligence
-    public function findManyByIntelligence($min)
+    public function findManyByIntelligence($lvl)
     {
         return $this
             ->createQueryBuilder('c')
-            ->select('c')
-            ->where('c.intelligence >= :min')
-            ->setParameter('min', $min)
+            ->select('c', 'p')
+            ->leftJoin('c.player', 'p')
+            ->where('c.intelligence >= :lvl')
+            ->setParameter('lvl', $lvl)
             ->getQuery()
             ->getResult();
     }

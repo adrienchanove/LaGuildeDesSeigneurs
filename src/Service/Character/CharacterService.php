@@ -50,10 +50,10 @@ class CharacterService implements CharacterServiceInterface
     /**
      * {inheritdoc}
      */
-    public function getAllGt($min)
+    public function getAllByIntelligenceLevel($lvl)
     {
         $charactersFinal = array();
-        $characters = $this->characterRepository->findManyByIntelligence($min);
+        $characters = $this->characterRepository->findManyByIntelligence($lvl);
         
         foreach ($characters as $character) {
             $charactersFinal[] = $character->toArray();

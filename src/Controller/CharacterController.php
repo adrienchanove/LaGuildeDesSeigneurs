@@ -82,10 +82,10 @@ class CharacterController extends AbstractController
      *  @OA\Response(response=404,description="Not Found")
      *  @OA\Tag(name="Character")
      */
-    #[Route('/character/display/gt/{min}', requirements: ["min" => "^([0-9]{1,4})$"], name: 'character_display_gt', methods: ["GET", "HEAD"])]
-    public function displayGT(Int $min): Response
+    #[Route('/character/display/AllByIntelligenceLevel/{lvl}', requirements: ["lvl" => "^([0-9]{1,4})$"], name: 'character_display_gt', methods: ["GET", "HEAD"])]
+    public function displayByIntelligence(Int $lvl): Response
     {
-        $characters = $this->characterService->getAllGt($min);
+        $characters = $this->characterService->getAllByIntelligenceLevel($lvl);
 
         return JsonResponse::fromJsonString($this->characterService->serializeJson($characters));
     }

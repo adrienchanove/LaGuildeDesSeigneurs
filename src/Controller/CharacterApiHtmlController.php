@@ -32,10 +32,10 @@ class CharacterApiHtmlController extends AbstractController
         ]);
     }
 
-    #[Route("/gt/{min}", requirements: ["min" => "^([0-9]{1,4})$"], name: "character_api_html_index_gt", methods: ["GET"])]
-    public function indexGt($min): Response
+    #[Route("/AllByIntelligenceLevel/{lvl}", requirements: ["lvl" => "^([0-9]{1,4})$"], name: "character_api_html_index_gt", methods: ["GET"])]
+    public function indexGt($lvl): Response
     {
-        $response = $this->client->request('GET','http://localhost/character/display/gt/'.$min);
+        $response = $this->client->request('GET','http://localhost/character/display/AllByIntelligenceLevel/'.$lvl);
         return $this->render('character_api_html/index.html.twig', [
             'characters' => $response->toArray(),
         ]);
