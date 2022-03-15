@@ -3,14 +3,22 @@
 namespace App\Service;
 
 use DateTime;
+use LogicException;
 use App\Form\CharacterType;
 use App\Entity\Character;
+use App\Repository\CharacterRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Finder\Finder;
-use LogicException;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use App\Event\CharacterEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 //use App\Repository
 
 class CharacterService implements CharacterServiceInterface
@@ -22,7 +30,8 @@ class CharacterService implements CharacterServiceInterface
     public function __construct(
         private EntityManagerInterface $em,
         FormFactoryInterface $formFactory,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        private CharacterRepository $characterRepository
     ) {
         $this->formFactory = $formFactory;
         $this->validator = $validator;
@@ -124,4 +133,21 @@ class CharacterService implements CharacterServiceInterface
     {      
         return $this->characterRepository->findAll();
     }
+
+    public function serializeJson($data)
+    {
+        $encoders = new JsonEncoder();
+        $defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($data) {
+                return $data->getIdentifier();
+            },
+        ];
+        $normalizers = new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
+        $serializer = new Serializer([new DateTimeNormalizer(), $normalizers], [$encoders]);
+
+        return $serializer->serialize($data, 'json');
+    }
+
+
+
 }

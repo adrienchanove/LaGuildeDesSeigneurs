@@ -11,33 +11,41 @@ use DateTime;
 
 class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $manager)
     {
+        /**
+         * Character fixture
+         */
         for ($i = 0; $i < 10; $i++) {
             $character = new Character();
-            $character->setKind(rand(0, 1) ? 'Dame' : 'Seigneur')
+            $character
+                ->setIdentifier(hash('sha1', uniqid()))
+                ->setKind(random_int(0, 1) ? 'Dame' : 'Seigneur')
                 ->setName('Eldalótë' . $i)
                 ->setSurname('Fleur elfique')
                 ->setCaste('Elfe')
                 ->setKnowledge('Arts')
-                ->setIntelligence(mt_rand(100, 200))
-                ->setLife(mt_rand(10, 20))
+                ->setIntelligence(random_int(100, 200))
+                ->setLife(random_int(10, 20))
                 ->setImage('/images/eldalote.jpg')
-                ->setIdentifier(hash('sha1', uniqid()))
-                ->setModification(new DateTime())
-                ->setCreation(new DateTime());
+                ->setCreation(new DateTime())
+                ->setModification(new DateTime());
+
             $manager->persist($character);
 
             $player = new Player();
-            $player->setFirstname('Adrien')
-                ->setLastname('Chanove : '.$i)
-                ->setEmail('adrien.chanove@gmail.com')
-                ->setMirian(0)
+            $player
+                ->setIdentifier(hash('sha1', uniqid()))
+                ->setFirstname(random_int(0, 1) ? 'Valentin' : 'Gauthier')
+                ->setLastname(random_int(0, 1) ? 'Henri' . $i : 'Mathieu' . $i)
+                ->setEmail("oofed" . $i . "@valfol.org")
+                ->setMirian(25)
                 ->setCreation(new DateTime())
-                ->setIdentifier(hash('sha1', uniqid()));
+                ->setModification(new DateTime());
 
-                $manager->persist($player);
+            $manager->persist($player);
         }
+
         $manager->flush();
     }
 }
