@@ -11,11 +11,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 #[Route('/character/html')]
 class CharacterHtmlController extends AbstractController
 {
     public function __construct(private CharacterServiceInterface $characterService)
     {
+        $this->characterService = $characterService;
     }
 
     #[Route('/', name: 'character_html_index', methods: ['GET'])]
@@ -34,6 +36,7 @@ class CharacterHtmlController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $this->characterService->createFromHtml($character);
             return $this->redirectToRoute('character_html_show', array('id' => $character->getId()));
         }

@@ -10,6 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+
 class CharacterHtmlType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
