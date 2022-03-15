@@ -28,6 +28,14 @@ class CharacterHtmlController extends AbstractController
         ]);
     }
 
+    #[Route('/gt/{min}', requirements: ["min" => "^([0-9]{1,4})$"], name: 'character_html_index_gt', methods: ['GET'])]
+    public function indexGT(Int $min): Response
+    {
+        return $this->render('character_html/index.html.twig', [
+            'characters' => $this->characterService->getAllGt($min),
+        ]);
+    }
+
     #[Route('/new', name: 'character_html_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -36,7 +44,7 @@ class CharacterHtmlController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             $this->characterService->createFromHtml($character);
             return $this->redirectToRoute('character_html_show', array('id' => $character->getId()));
         }

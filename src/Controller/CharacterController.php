@@ -62,7 +62,6 @@ class CharacterController extends AbstractController
      *  @OA\Tag(name="Character")
      */
     #[Route('/character/display/{identifier}', name: 'character_display', requirements: ["identifier" => "^([a-é0-9]{40})$"], methods: ["GET", "HEAD"])]
-    #[Entity("character", "repository.findOneByIdentifier(identifier)")]
     public function display(Character $character): Response
     {
         $this->denyAccessUnlessGranted('characterDisplay', $character);
@@ -72,6 +71,23 @@ class CharacterController extends AbstractController
         // dd($character);
 
         return JsonResponse::fromJsonString($this->characterService->serializeJson($character));
+    }
+
+    // DISPLAY when inteligence is more than XXXX or equals
+    /**
+     *  Displays the Character whith inteligence greater than parameter
+     *  @OA\Parameter(name="min",in="path",description="Minimum allowed for the character research",required=true)
+     *  @OA\Response(response=200,description="Success",@Model(type=Character::class))
+     *  @OA\Response(response=403,description="Access denied")
+     *  @OA\Response(response=404,description="Not Found")
+     *  @OA\Tag(name="Character")
+     */
+    #[Route('/character/display/gt/{min}', requirements: ["min" => "^([0-9]{1,4})$"], name: 'character_display_gt', methods: ["GET", "HEAD"])]
+    public function displayGT(Int $min): Response
+    {
+        $characters = $this->characterService->getAllGt($min);
+
+        return JsonResponse::fromJsonString($this->characterService->serializeJson($characters));
     }
 
     //CREATE

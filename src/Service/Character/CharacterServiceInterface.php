@@ -12,6 +12,11 @@ interface CharacterServiceInterface
     public function getAll();
 
     /**
+     * Gets all the characters whith intelligence greater than parameter or equals
+     */
+    public function getAllGt($min);
+
+    /**
      * Creates the character
      */
     public function create(string $data);

@@ -31,6 +31,18 @@ class CharacterRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    //find many character by minimum intelligence
+    public function findManyByIntelligence($min)
+    {
+        return $this
+            ->createQueryBuilder('c')
+            ->select('c')
+            ->where('c.intelligence >= :min')
+            ->setParameter('min', $min)
+            ->getQuery()
+            ->getResult();
+    }
+
     /*
     public function findOneBySomeField($value): ?Character
     {

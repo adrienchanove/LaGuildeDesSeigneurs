@@ -50,6 +50,21 @@ class CharacterService implements CharacterServiceInterface
     /**
      * {inheritdoc}
      */
+    public function getAllGt($min)
+    {
+        $charactersFinal = array();
+        $characters = $this->characterRepository->findManyByIntelligence($min);
+        
+        foreach ($characters as $character) {
+            $charactersFinal[] = $character->toArray();
+        }
+
+        return $charactersFinal;
+    }
+
+    /**
+     * {inheritdoc}
+     */
     public function create(string $data)
     {
         //Use with {"kind":"Dame","name":"Eldalótë","surname":"Fleur elfique","caste":"Elfe","knowledge":"Arts","intelligence":120,"life":12,"image":"/images/eldalote.jpg"}
