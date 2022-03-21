@@ -82,10 +82,45 @@ class CharacterController extends AbstractController
      *  @OA\Response(response=404,description="Not Found")
      *  @OA\Tag(name="Character")
      */
-    #[Route('/character/display/AllByIntelligenceLevel/{lvl}', requirements: ["lvl" => "^([0-9]{1,4})$"], name: 'character_display_gt', methods: ["GET", "HEAD"])]
+    #[Route('/character/display/AllByIntelligenceLevel/{lvl}', requirements: ["lvl" => "^([0-9]{1,4})$"], name: 'character_display_intelligence_gt', methods: ["GET", "HEAD"])]
     public function displayByIntelligence(Int $lvl): Response
     {
         $characters = $this->characterService->getAllByIntelligenceLevel($lvl);
+
+        return JsonResponse::fromJsonString($this->characterService->serializeJson($characters));
+    }
+
+    // DISPLAY when inteligence is more than XXXX or equals
+    /**
+     *  Displays the Character whith inteligence greater than parameter
+     *  @OA\Parameter(name="min",in="path",description="Minimum allowed for the character research",required=true)
+     *  @OA\Response(response=200,description="Success",@Model(type=Character::class))
+     *  @OA\Response(response=403,description="Access denied")
+     *  @OA\Response(response=404,description="Not Found")
+     *  @OA\Tag(name="Character")
+     */
+    #[Route('/character/display/AllByLife/{life}', requirements: ["life" => "^([0-9]{1,4})$"], name: 'character_display_life_gt', methods: ["GET", "HEAD"])]
+    public function displayByLife(Int $life): Response
+    {
+        $characters = $this->characterService->getAllByLife($life);
+
+        return JsonResponse::fromJsonString($this->characterService->serializeJson($characters));
+    }
+
+
+    // DISPLAY when inteligence is more than XXXX or equals
+    /**
+     *  Displays the Character whith inteligence greater than parameter
+     *  @OA\Parameter(name="min",in="path",description="Minimum allowed for the character research",required=true)
+     *  @OA\Response(response=200,description="Success",@Model(type=Character::class))
+     *  @OA\Response(response=403,description="Access denied")
+     *  @OA\Response(response=404,description="Not Found")
+     *  @OA\Tag(name="Character")
+     */
+    #[Route('/character/display/AllByCaste/{caste}', requirements: ["caste" => "^([\w\sa-zA-Z]{1,16})$"], name: 'character_display_caste_gt', methods: ["GET", "HEAD"])]
+    public function displayByCaste(String $caste): Response
+    {
+        $characters = $this->characterService->getAllByCaste($caste);
 
         return JsonResponse::fromJsonString($this->characterService->serializeJson($characters));
     }

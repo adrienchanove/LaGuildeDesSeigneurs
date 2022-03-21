@@ -28,11 +28,27 @@ class CharacterHtmlController extends AbstractController
         ]);
     }
 
-    #[Route('/AllByIntelligenceLevel/{lvl}', requirements: ["lvl" => "^([0-9]{1,4})$"], name: 'character_html_index_gt', methods: ['GET'])]
+    #[Route('/AllByIntelligenceLevel/{lvl}', requirements: ["lvl" => "^([0-9]{1,4})$"], name: 'character_html_index_intelligence_gt', methods: ['GET'])]
     public function getAllByIntelligenceLevel(Int $lvl): Response
     {
         return $this->render('character_html/index.html.twig', [
             'characters' => $this->characterService->getAllByIntelligenceLevel($lvl),
+        ]);
+    }
+
+    #[Route('/AllByLife/{life}', requirements: ["life" => "^([0-9]{1,4})$"], name: 'character_html_index_life_gt', methods: ['GET'])]
+    public function getAllByLife(Int $life): Response
+    {
+        return $this->render('character_html/index.html.twig', [
+            'characters' => $this->characterService->getAllByIntelligenceLevel($life),
+        ]);
+    }
+
+    #[Route('/AllByCaste/{caste}', requirements: ["caste" => "^([\w\sa-zA-Z]{1,16})$"], name: 'character_html_index_caste_gt', methods: ['GET'])]
+    public function getAllByCaste(String $caste): Response
+    {
+        return $this->render('character_html/index.html.twig', [
+            'characters' => $this->characterService->getAllByCaste($caste),
         ]);
     }
 

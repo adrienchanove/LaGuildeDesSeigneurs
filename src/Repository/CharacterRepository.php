@@ -44,6 +44,32 @@ class CharacterRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    //find many character by minimum life
+    public function findManyByLife($life)
+    {
+        return $this
+            ->createQueryBuilder('c')
+            ->select('c', 'p')
+            ->leftJoin('c.player', 'p')
+            ->where('c.life >= :life')
+            ->setParameter('life', $life)
+            ->getQuery()
+            ->getResult();
+    }
+
+    //find many character by Caste
+    public function findManyByCaste($caste)
+    {
+        return $this
+            ->createQueryBuilder('c')
+            ->select('c', 'p')
+            ->leftJoin('c.player', 'p')
+            ->where('c.caste = :caste')
+            ->setParameter('caste', $caste)
+            ->getQuery()
+            ->getResult();
+    }
+
     /*
     public function findOneBySomeField($value): ?Character
     {

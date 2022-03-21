@@ -17,6 +17,16 @@ interface CharacterServiceInterface
     public function getAllByIntelligenceLevel($lvl);
 
     /**
+     * Gets all the characters whith life greater than parameter or equals
+     */
+    public function getAllByLife($life);
+
+    /**
+     * Gets all the characters whith thes caste in parameter
+     */
+    public function getAllByCaste($caste);
+
+    /**
      * Creates the character
      */
     public function create(string $data);

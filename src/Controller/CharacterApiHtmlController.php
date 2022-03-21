@@ -32,10 +32,30 @@ class CharacterApiHtmlController extends AbstractController
         ]);
     }
 
-    #[Route("/AllByIntelligenceLevel/{lvl}", requirements: ["lvl" => "^([0-9]{1,4})$"], name: "character_api_html_index_gt", methods: ["GET"])]
-    public function indexGt($lvl): Response
+    #[Route("/AllByIntelligenceLevel/{lvl}", requirements: ["lvl" => "^([0-9]{1,4})$"], name: "character_api_html_intelligence_gt", methods: ["GET"])]
+    public function indexIntelligenceGt($lvl): Response
     {
         $response = $this->client->request('GET','http://localhost/character/display/AllByIntelligenceLevel/'.$lvl);
+        return $this->render('character_api_html/index.html.twig', [
+            'characters' => $response->toArray(),
+        ]);
+    }
+
+    #[Route("/AllByLife/{life}", requirements: ["life" => "^([0-9]{1,4})$"], name: "character_api_html_life_gt", methods: ["GET"])]
+    public function indexLifeGt($life): Response
+    {
+        $response = $this->client->request('GET','http://localhost/character/display/AllByLife/'.$life);
+        
+        return $this->render('character_api_html/index.html.twig', [
+            'characters' => $response->toArray(),
+        ]);
+    }
+
+    #[Route("/AllByCaste/{caste}", requirements: ["caste" => "^([\w\sa-zA-Z]{1,16})$"], name: "character_api_html_caste_gt", methods: ["GET"])]
+    public function indexCasteGt($caste): Response
+    {
+        $response = $this->client->request('GET','http://localhost/character/display/AllByCaste/'.$caste);
+        
         return $this->render('character_api_html/index.html.twig', [
             'characters' => $response->toArray(),
         ]);

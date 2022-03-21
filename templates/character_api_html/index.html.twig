@@ -35,10 +35,10 @@
                     <a href="{{ path('character_api_html_show', {'identifier': character.identifier}) }}">{{ character.name }}</a>
             	</td>
                 <td>{{ character.surname }}</td>
-                <td>{{ character.caste }}</td>
+                <td><a href="{{ path('character_api_html_caste_gt',{'caste':character.caste}) }}"> {{ character.caste }}</a></td>
                 <td>{{ character.knowledge }}</td>
-                <td>{{ character.life }}</td>
-                <td>{{ character.intelligence }}</td>
+                <td><a href="{{ path('character_api_html_life_gt',{'life':character.life}) }}"> {{ character.life }}</a></td>
+                <td><a href="{{ path('character_api_html_intelligence_gt',{'lvl':character.intelligence}) }}"> {{ character.intelligence }}</a></td>
                 <td>{{ character.creation ? character.creation|date('d/m/Y') : '' }}</td>
                 <td>{{ character.modification ? character.modification|date('d/m/Y') : '' }}</td>
                 <td>
